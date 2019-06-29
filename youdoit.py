@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import InputRequired
+from ordered_set import OrderedSet
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'promiseIdiChaalaPeddaSecret'
@@ -45,15 +46,18 @@ def getSavedVids():
 @app.route("/<string:loopvidid>", methods=['GET', 'POST'])
 def main(loopvidid=None):
     if loopvidid:
-        return render_template("vidoptions.page", results=[loopvidid])
+        return render_template("vidoptions.html", results=[loopvidid])
     else:
         form = VideoSearchForm()
         if form.validate_on_submit():
             query_string = urllib.parse.urlencode({"search_query": form.searchThis.data})
             html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
-            results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-            return render_template("vidoptions.page", results=results[:10])
-        return render_template("index.page", form=form)
+            ylist = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
+            # Use an OrderedSet since youtube search will possibly give the best match first.
+            videos = list(OrderedSet(ylist[:50])) # Expectation is that the first 50 will contain duplicates resulting in at least 25 videos.
+            results = zip([x for x in range(1, len(videos)+1)], videos)
+            return render_template("vidoptions.html", results=results)
+        return render_template("index.html", form=form)
 
 
 app.run(host='0.0.0.0', port=8009, debug=True)
