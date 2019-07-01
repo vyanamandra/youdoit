@@ -1,6 +1,7 @@
 import re
 import urllib.parse
 import urllib.request
+from typing import Dict, List, Any
 
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
@@ -45,8 +46,11 @@ def getSavedVids():
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/<string:loopvidid>", methods=['GET', 'POST'])
 def main(loopvidid=None):
+    yplayers = {}
+    results = None
     if loopvidid:
-        return render_template("vidoptions.html", results=[loopvidid])
+        yplayers['res'] = {"id": loopvidid, "videoId": loopvidid}
+        return render_template("vidoptions.html", yplayers = yplayers)
     else:
         form = VideoSearchForm()
         if form.validate_on_submit():
@@ -54,10 +58,13 @@ def main(loopvidid=None):
             html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
             ylist = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
             # Use an OrderedSet since youtube search will possibly give the best match first.
-            videos = list(OrderedSet(ylist[:50])) # Expectation is that the first 50 will contain duplicates resulting in at least 25 videos.
-            results = zip([x for x in range(1, len(videos)+1)], videos)
-            return render_template("vidoptions.html", results=results)
+            videos = list(OrderedSet(ylist[:20])) # Expectation is that the first 50 will contain duplicates resulting in at least 25 videos.
+            results = zip([x+1 for x in range(len(videos))], videos)
+            yp = []
+            for vid in range(len(videos)):
+                yp.append({"id": str(vid+1), "pid": "player{}".format(vid+1), "vid": videos[vid]})
+            yplayers['res'] = yp
+            return render_template("vidoptions.html", yplayers = yplayers)
         return render_template("index.html", form=form)
-
 
 app.run(host='0.0.0.0', port=8009, debug=True)
