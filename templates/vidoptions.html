@@ -7,8 +7,8 @@
         <tr>
             <th scope="col">#</th>
             <th style="width: 75%" scope="col" align="center">Loop Video</th>
-            <th scope="col" align="center">Download Audio</th>
-            <th scope="col" align="center">Download Video</th>
+            <th scope="col" align="center">Download Options</th>
+            <th scope="col" align="center">History</th>
         </tr>
         </thead>
         <tbody>
@@ -21,8 +21,23 @@
                     </div>
                 </div>
             </td>
-            <td align="center"></td>
-            <td align="center">Download link</td>
+            <td align="center">
+                <div>
+                    <div name="downloadoptns">
+                        <form>
+                            <input type="hidden" id="vid" name="vid" value="{{ result['vid'] }}">
+                            <label for="type">Format to download (default - audio and video)</label>
+                            <select class="form-control" id="type" name="type">
+                                <option value="audio">Audio</option>
+                                <option value="avio" selected>Audio and Video</option>
+                            </select>
+                            <input type="button" id="btn_{{ result['vid'] }}" onclick="youtubedl(this.id)"
+                                   value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </td>
+            <td align="center">History</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -56,5 +71,13 @@
         'onStateChange': onPlayerStateChange
         }});
   }
+  function youtubedl(btn_id) {
+    var form_id = $("input#"+btn_id).parent();
+    var url = "/youtubedl?"+ form_id.serialize();
+    $.get(url, function(data){
+      $(form_id.parent()).html("<strong>Saved path: [</strong>" + data.savedpath + "] and <strong>Status</strong> is: [" + data.status + "]");
+    });
+  }
+
 </script>
 {% endblock %}
