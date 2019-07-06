@@ -14,13 +14,11 @@ from ordered_set import OrderedSet
 import youtube_dl
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'promiseIdiChaalaPeddaSecret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///youdoit.sqlite3'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config.from_pyfile('youloopit.config')
 db = SQLAlchemy(app)
 Bootstrap(app)
 
+from views import
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
