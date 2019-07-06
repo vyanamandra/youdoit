@@ -1,6 +1,6 @@
 import sys
 import os
-cur_wd = os.getcwd()
+cur_wd = '/var/www/youloopit'
 sys.path.insert(0, cur_wd)
 activate_this = (os.path.sep).join([cur_wd, 'venv', 'bin', 'activate_this.py'])
 with open(activate_this) as file_:

@@ -9,7 +9,8 @@ from youloopit import app
 def youtubedl():
     vid = request.args.get('vid', None)
     download_type = request.args.get('type', 'avio')
-    # TODO: Need to perform the right type of download as requested. Currently, only 'Complete Audio/Video of the best resolution is being downlaoded'
+    # TODO: Need to perform the right type of download as requested. Currently,
+    #  only 'Complete Audio/Video of the best resolution is being downlaoded'
     _ = download_type  # Just a way to ignore this unused warning.
     return YouTube.download(videoId=vid)
 
