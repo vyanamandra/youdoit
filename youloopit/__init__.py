@@ -7,7 +7,7 @@ app.config.from_pyfile('youloopit.config')
 db = SQLAlchemy(app)
 Bootstrap(app)
 
-from youloopit.views import views
+from youloopit.views.views import *
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8009, debug=True)
+    app.run(host='0.0.0.0', port=8092, debug=True)

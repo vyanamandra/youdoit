@@ -6,21 +6,24 @@
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th style="width: 75%" scope="col" align="center">Loop Video</th>
+            <th style="width: 95%" scope="col" align="center">Loop Video</th>
+            <!--
             <th scope="col" align="center">Download Options</th>
             <th scope="col" align="center">History</th>
+            -->
         </tr>
         </thead>
         <tbody>
         {% for result in yplayers['res'] %}
         <tr>
             <th scope="row">{{ result['id'] }}</th>
-            <td style="width: 75%">
+            <td style="width: 95%">
                 <div class="embed-responsive embed-responsive-16by9">
                     <div id="{{ result['pid'] }}">
                     </div>
                 </div>
             </td>
+            <!--
             <td align="center">
                 <div>
                     <div name="downloadoptns">
@@ -38,6 +41,7 @@
                 </div>
             </td>
             <td align="center">History</td>
+            -->
         </tr>
         {% endfor %}
         </tbody>

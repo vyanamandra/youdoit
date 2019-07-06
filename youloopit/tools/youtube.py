@@ -8,21 +8,20 @@ class YouTube():
     """
     Search and return the list of Youtube videos matching the search query
     """
-
     def __init__(self, search_string):
         self.search_string = search_string
         self.yList = None
 
-    @classmethod
     def __gatherList__(self):
         """
         Private method. It is definitely related to the class and youtube search in particular
         Query youtube for a list of videos and save this list locally. It is a private function.
         :return: List of videos matching the result is stored in object variable yList
         """
+        print ("I am at gather list for search string: <" + self.search_string + ">")
         recompiled = re.compile(r'href=\"\/watch\?v=(.{11})')
         try:
-            query_string = urllib.parse.urlencode({"search_query": searchString})
+            query_string = urllib.parse.urlencode({"search_query": self.search_string})
             html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
             self.yList = recompiled.findall(html_content.read().decode())
         except:
@@ -39,12 +38,7 @@ class YouTube():
             self.__gatherList__()
 
         videos = list(OrderedSet(self.yList[:numResults]))
-        yp = {}
-        for vid in range(len(videos)):
-            yp.append({"id": str(vid + 1), "pid": "player{}".format(vid + 1), "vid": videos[vid]})
-        yplayers = {}
-        yplayers['res'] = yp
-        return (yplayers)
+        return (videos)
 
     @staticmethod
     def download(videoId, uid = None, savepath = None):
